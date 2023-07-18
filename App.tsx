@@ -6,17 +6,20 @@ import {
   StyleSheet,
   useColorScheme,
 } from 'react-native';
+import {PaperProvider} from 'react-native-paper';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   return (
-    <SafeAreaView style={styles.root}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}
-      />
-    </SafeAreaView>
+    <PaperProvider>
+      <SafeAreaView style={styles.root}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.scrollView}
+        />
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
