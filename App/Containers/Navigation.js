@@ -1,11 +1,10 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {View, Text} from 'react-native';
+import {Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Header from '../Components/Header';
-import Fonts from '../Theme/Fonts';
 import BottomTabScreen from '../Screens/BottomTabScreen';
 
 export function HomeScreen(props) {
@@ -13,9 +12,15 @@ export function HomeScreen(props) {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text
         onPress={() => {
-          props.navigation.navigate('Details');
+          props.navigation.openDrawer();
         }}>
         Home Screen
+      </Text>
+      <Text
+        onPress={() => {
+          props.navigation.navigate('BottomTabScreen');
+        }}>
+        BottomTabScreen
       </Text>
     </View>
   );
@@ -55,6 +60,7 @@ function Navigation() {
             headerShown: true,
             header: () => <Header title={'Main Header Home'} />,
           }}
+          component={HomeScreen}
         />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />

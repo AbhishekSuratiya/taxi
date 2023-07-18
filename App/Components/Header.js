@@ -4,7 +4,6 @@ import {MD2Colors} from 'react-native-paper';
 import Fonts from '../Theme/Fonts';
 
 const Header = props => {
-  console.log(props, 'aaaaaaaaa');
   return (
     <View
       style={{
