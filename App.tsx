@@ -11,10 +11,7 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <SafeAreaView style={styles.root}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        // backgroundColor={'black'}
-      />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollView}
