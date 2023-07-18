@@ -6,23 +6,35 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Header from '../Components/Header';
 import Fonts from '../Theme/Fonts';
+import BottomTabScreen from '../Screens/BottomTabScreen';
 
-function HomeScreen() {
+export function HomeScreen(props) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text
-        style={{
-          fontFamily: Fonts.UbuntuMedium,
+        onPress={() => {
+          props.navigation.navigate('Details');
         }}>
         Home Screen
       </Text>
     </View>
   );
 }
-function DetailsScreen() {
+export function DetailsScreen(props) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
+      <Text
+        onPress={() => {
+          props.navigation.navigate('Home');
+        }}>
+        Details Screen
+      </Text>
+      <Text
+        onPress={() => {
+          props.navigation.navigate('BottomTabScreen');
+        }}>
+        BottomTabScreen
+      </Text>
     </View>
   );
 }
@@ -39,13 +51,13 @@ function Navigation() {
         }}>
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
           options={{
             headerShown: true,
-            header: Header,
+            header: () => <Header title={'Main Header Home'} />,
           }}
         />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
