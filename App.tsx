@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   useColorScheme,
 } from 'react-native';
-import {PaperProvider} from 'react-native-paper';
+import {MD2Colors, PaperProvider} from 'react-native-paper';
+import Navigation from './App/Containers/Navigation';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -14,10 +14,7 @@ function App() {
     <PaperProvider>
       <SafeAreaView style={styles.root}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        />
+        <Navigation />
       </SafeAreaView>
     </PaperProvider>
   );
@@ -28,11 +25,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   root: {
-    backgroundColor: 'red',
+    backgroundColor: MD2Colors.indigo50,
     flex: 1,
-  },
-  scrollView: {
-    backgroundColor: 'pink',
   },
 });
 
