@@ -1,8 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {DetailsScreen, HomeScreen} from '../Containers/Navigation';
+import {DetailsScreen, HomeScreen} from './Navigation';
 import Header from '../Components/Header';
-import DrawerNavigation from './DrawerNavigation';
+import LeftDrawerNavigation from './LeftDrawerNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +22,7 @@ const BottomTabScreen = props => {
         }}
       />
       <Tab.Screen name="Details" component={DetailsScreen} />
-      <Tab.Screen name="DrawerNavigation" component={DrawerNavigation} />
+      <Tab.Screen name="DrawerNavigation" component={LeftDrawerNavigation} />
     </Tab.Navigator>
   );
 };

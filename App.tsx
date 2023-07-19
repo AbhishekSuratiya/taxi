@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import {MD2Colors, PaperProvider} from 'react-native-paper';
-import Navigation from './App/Containers/Navigation';
+import LeftDrawerNavigation from './App/Navigations/LeftDrawerNavigation';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -14,7 +14,7 @@ function App() {
     <PaperProvider>
       <SafeAreaView style={styles.root}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <Navigation />
+        <LeftDrawerNavigation />
       </SafeAreaView>
     </PaperProvider>
   );
