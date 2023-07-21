@@ -1,10 +1,35 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {MD2Colors} from 'react-native-paper';
-import Fonts from '../Theme/Fonts';
+import H1B from '../Theme/Typography/H1B';
+import LocationAddressCard from './LocationAddressCard';
+import ColoredButton from './ColoredButton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LocationPicker = props => {
-  return <View />;
+  return (
+    <>
+      <H1B>Where to</H1B>
+      <LocationAddressCard title={'From'} location={'Delhi'} />
+      <LocationAddressCard
+        title={'To'}
+        location={'Uttrakhand'}
+        style={{marginBottom: 16}}
+      />
+      <ColoredButton
+        onPress={() => {}}
+        title={"Let's Go"}
+        icon={
+          <Icon
+            name="car-sports"
+            size={32}
+            color={MD2Colors.white}
+            style={{marginTop: -8}}
+          />
+        }
+      />
+    </>
+  );
 };
 
 export default LocationPicker;
