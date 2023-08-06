@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {MD2Colors, PaperProvider} from 'react-native-paper';
 import LeftDrawerNavigation from './App/Navigations/LeftDrawerNavigation';
+import FlashMessage from 'react-native-flash-message';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -15,6 +16,7 @@ function App() {
       <SafeAreaView style={styles.root}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <LeftDrawerNavigation />
+        <FlashMessage position="top" />
       </SafeAreaView>
     </PaperProvider>
   );

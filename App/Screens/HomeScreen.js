@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import {HEIGHT, WIDTH} from '../Utils/Constants';
 import GetLocationInput from '../Navigations/GetLocationInput';
 import Geolocation from 'react-native-geolocation-service';
-import {requestLocationPermission} from '../Utils/Utils';
+import {requestLocationPermission, showToast} from '../Utils/Utils';
 import H2B from '../Theme/Typography/H2B';
 import ColoredButton from '../Components/ColoredButton';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -82,9 +82,9 @@ const HomeScreen = props => {
           onPress={() => {
             if (
               !Object.keys(pickupCords).length ||
-              !Object.keys(dropCords.length)
+              !Object.keys(dropCords).length
             ) {
-              alert('hi');
+              showToast(true, 'Please select pickup and drop location.');
               return;
             }
             props.navigation.navigate('MapScreen', {
