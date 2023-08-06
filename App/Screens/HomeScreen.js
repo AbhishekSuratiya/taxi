@@ -1,101 +1,195 @@
-import React, {useRef, useState} from 'react';
-import {ImageBackground, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ImageBackground, Modal, Platform, StyleSheet, View} from 'react-native';
 import BlurryCardBackground from '../Components/BlurryCardBackground';
-import H1B from '../Theme/Typography/H1B';
 import LocationPicker from '../Components/LocationPicker';
-import BlackButton from '../Components/BlackButton';
-import MapView, {Marker} from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import {MD2Colors} from 'react-native-paper';
-import {indigo500} from 'react-native-paper/src/styles/themes/v2/colors';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {GOOGLE_MAP_API_KEY} from '../Utils/Constants';
+import {MD2Colors, Surface} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Entypo';
+import {HEIGHT, WIDTH} from '../Utils/Constants';
+import GetLocationInput from '../Navigations/GetLocationInput';
+import Geolocation from 'react-native-geolocation-service';
+import {requestLocationPermission} from '../Utils/Utils';
+import H2B from '../Theme/Typography/H2B';
+import ColoredButton from '../Components/ColoredButton';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+navigator.geolocation = require('react-native-geolocation-service');
 
 const HomeScreen = props => {
-  const [isWhereToExpanded, setIsWhereToExpanded] = useState(false);
-  const mapRef = useRef();
-  const [cords, setCords] = useState({
-    pickupCords: {
-      latitude: 30.7046,
-      longitude: 76.7179,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-    dropCords: {
-      latitude: 30.7333,
-      longitude: 76.7794,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-  });
-  return (
-    <>
-      <GooglePlacesAutocomplete
-        placeholder="Search"
-        onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          console.log(data, details);
-        }}
-        query={{
-          key: GOOGLE_MAP_API_KEY,
-          language: 'en',
-        }}
-      />
-      <MapView
-        ref={mapRef}
-        style={{
-          flex: 1,
-        }}
-        initialRegion={{
-          ...cords.pickupCords,
-        }}>
-        <Marker coordinate={cords.pickupCords} />
-        <Marker coordinate={cords.dropCords} />
-        <MapViewDirections
-          origin={cords.pickupCords}
-          destination={cords.dropCords}
-          // apikey={GOOGLE_MAP_API_KEY}
-          strokeWidth={3}
-          strokeColor={MD2Colors.indigo500}
-          optimizeWaypoints={true}
-          onReady={res => {
-            mapRef.current.fitToCoordinates(res.coordinates, {
-              edgePadding: {
-                top: 20,
-                bottom: 100,
-                left: 64,
-                right: 64,
-              },
-            });
-          }}
-        />
-      </MapView>
-    </>
-  );
+  const [fromModalVisible, setFromModalVisible] = useState(false);
+  const [toModalVisible, setToModalVisible] = useState(false);
+  const [fromLocation, setFromLocation] = useState('');
+  const [toLocation, setToLocation] = useState('');
+  const [pickupCords, setPickupCords] = useState({});
+  const [dropCords, setDropCords] = useState({});
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization('whenInUse').then(result => {
+        if (result === 'granted') {
+          console.log('Permission granted');
+          // Geolocation.getCurrentPosition(
+          //   position => {
+          //     console.log('Current position:', position);
+          //   },
+          //   error => {
+          //     console.log('Error getting location:', error);
+          //   },
+          //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          // );
+        }
+      });
+    } else {
+      requestLocationPermission();
+    }
+  }, []);
+  const getPickupCoordinate = (data, detail) => {
+    setPickupCords({
+      latitude: detail.geometry.location.lat,
+      longitude: detail.geometry.location.lng,
+    });
+    setFromModalVisible(false);
+    setFromLocation(detail.formatted_address);
+  };
+  const getDropCoordinate = (data, detail) => {
+    setDropCords({
+      latitude: detail.geometry.location.lat,
+      longitude: detail.geometry.location.lng,
+    });
+    setToModalVisible(false);
+    setToLocation(detail.formatted_address);
+  };
+
   return (
     <ImageBackground
-      source={{uri: 'https://i.imgur.com/l7zTqzP.png'}}
+      // source={{uri: 'https://i.imgur.com/l7zTqzP.png'}}
+      source={{uri: null}}
       resizeMode={'cover'}
       style={{
+        backgroundColor: MD2Colors.deepPurple100,
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
         paddingBottom: 64,
       }}>
-      <BlurryCardBackground onPress={() => setIsWhereToExpanded(prev => !prev)}>
-        {isWhereToExpanded ? (
-          <H1B>Where to</H1B>
-        ) : (
-          <>
-            <LocationPicker />
-          </>
-        )}
+      <BlurryCardBackground>
+        <LocationPicker
+          from={fromLocation}
+          to={toLocation}
+          onPressFrom={() => setFromModalVisible(true)}
+          onPressTo={() => setToModalVisible(true)}
+        />
+        <ColoredButton
+          onPress={() => {
+            if (
+              !Object.keys(pickupCords).length ||
+              !Object.keys(dropCords.length)
+            ) {
+              alert('hi');
+              return;
+            }
+            props.navigation.navigate('MapScreen', {
+              pickupCords,
+              dropCords,
+            });
+          }}
+          title={"Let's Go"}
+          icon={
+            <MaterialCommunityIcons
+              name="car-sports"
+              size={32}
+              color={MD2Colors.white}
+              style={{marginTop: -8}}
+            />
+          }
+        />
       </BlurryCardBackground>
-      {/*<BlurryCardBackground>*/}
-      {/*  <BlackButton title={'Ride Later'} style={{marginBottom: 16}} />*/}
-      {/*  <BlackButton title={'Ride Now'} />*/}
-      {/*</BlurryCardBackground>*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={fromModalVisible}
+        onRequestClose={() => {
+          setFromModalVisible(false);
+        }}>
+        <View style={styles.centeredView}>
+          <Surface style={styles.modalView} elevation={2}>
+            <H2B
+              style={{
+                marginTop: 16,
+                alignSelf: 'flex-start',
+                marginBottom: 16,
+              }}>
+              {'Search pickup location'}
+            </H2B>
+            <Icon
+              style={styles.cross}
+              name="cross"
+              size={24}
+              color={MD2Colors.red600}
+              onPress={() => setFromModalVisible(!fromModalVisible)}
+            />
+            <GetLocationInput
+              onPress={getPickupCoordinate}
+              placeholder={'Search pickup location'}
+            />
+          </Surface>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={toModalVisible}
+        onRequestClose={() => {
+          setToModalVisible(false);
+        }}>
+        <View style={styles.centeredView}>
+          <Surface style={styles.modalView} elevation={2}>
+            <H2B
+              style={{
+                marginTop: 16,
+                alignSelf: 'flex-start',
+                marginBottom: 16,
+              }}>
+              {'Search drop location'}
+            </H2B>
+            <Icon
+              style={styles.cross}
+              name="cross"
+              size={24}
+              color={MD2Colors.red600}
+              onPress={() => setToModalVisible(!toModalVisible)}
+            />
+            <GetLocationInput
+              onPress={getDropCoordinate}
+              placeholder={'Search pickup location'}
+            />
+          </Surface>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    width: WIDTH - 32,
+    height: HEIGHT - 300,
+  },
+  cross: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+  },
+});

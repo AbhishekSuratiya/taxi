@@ -5,7 +5,7 @@ import {MD2Colors} from 'react-native-paper';
 
 const ColoredButton = ({title, onPress, icon}) => {
   return (
-    <TouchableOpacity style={styles.root}>
+    <TouchableOpacity style={styles.root} onPress={onPress}>
       <H2B style={{color: MD2Colors.white, marginRight: 8}}>{title}</H2B>
       {icon && icon}
     </TouchableOpacity>
